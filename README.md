@@ -8,7 +8,8 @@ text from the `edge-blog` repo) and [waterbearfieldschool.org](https://waterbear
 |---|---|---|
 | [`collage/`](collage/), [`wfs/collage/`](wfs/collage/) | vukdragojevic.com | White page, fixed left nav, freeform scattered-image collage, pinned labels, quick-view lightbox |
 | [`columns/`](columns/), [`wfs/columns/`](wfs/columns/) | jakewinkle.com | Black page, serif type, ruled header, two staggered columns with "Title, Year" captions, scrolling marquee |
-| [`wfs/field-days/`](wfs/field-days/) | both | Field Days schedule (hover a row for a preview), a "today" line, then past days as a timeline: date and title pinned left, photos in staggered columns |
+| [`wfs/field-days/`](wfs/field-days/) | both | Field Days schedule, a "today" line, then past days as a timeline: date and title pinned left, photos in staggered columns |
+| [`wfs/field-days-stacks/`](wfs/field-days-stacks/) | both | Same schedule with a square thumbnail per row (sized to the text beside it); each past day is one photo drawn as a stack of prints that grows into a swipeable full-screen gallery. `#<slug>` or `#<slug>/<n>` links straight to a day's gallery |
 
 The `collage/` and `columns/` folders hold the shared engine (CSS + JS) as well as the
 Edge Collective pages; the WFS pages load the same engine with different content.
@@ -27,7 +28,7 @@ Routes:
 
 - `collage/#/` overview, `#/c/<category>`, `#/p/<slug>`, `#/index`, `#/info`
 - `columns/#/` home, `#/p/<slug>`, `#/about`
-- `wfs/field-days/` is a single page
+- `wfs/field-days/` is a single page; `wfs/field-days-stacks/#<slug>/<n>` opens a day's gallery at photo n
 
 ## Content
 

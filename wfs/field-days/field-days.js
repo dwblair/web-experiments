@@ -63,7 +63,7 @@
 
   function render() {
     const rows = schedule.upcoming.map((u) => `
-      <li class="row"${u.image && IM[u.image] ? ` data-peek="${esc(ASSETS + IM[u.image].sm)}"` : ""}>
+      <li class="row">
         ${dateBlock(u.date)}
         <div>
           <div class="title">${esc(u.title)}</div>
@@ -124,38 +124,7 @@
     main.querySelectorAll("[data-day]").forEach((b) =>
       b.addEventListener("click", () => openQuick(+b.dataset.day, +b.dataset.k))
     );
-    bindPeek();
   }
-
-  /* ---------- Hover peek on upcoming rows ---------- */
-
-  const peek = $("#peek");
-  const peekImg = peek.querySelector("img");
-  let px = 0, py = 0, raf = 0;
-
-  function placePeek() {
-    raf = 0;
-    const w = peek.offsetWidth, h = peek.offsetHeight || w * 0.6;
-    const x = Math.min(px + 28, innerWidth - w - 16);
-    const y = Math.max(16, Math.min(py - h / 2, innerHeight - h - 16));
-    peek.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-  }
-  function bindPeek() {
-    main.querySelectorAll(".row[data-peek]").forEach((row) => {
-      row.addEventListener("mouseenter", (e) => {
-        peekImg.src = row.dataset.peek;
-        px = e.clientX; py = e.clientY;
-        placePeek();
-        peek.classList.add("on");
-      });
-      row.addEventListener("mousemove", (e) => {
-        px = e.clientX; py = e.clientY;
-        if (!raf) raf = requestAnimationFrame(placePeek);
-      });
-      row.addEventListener("mouseleave", () => peek.classList.remove("on"));
-    });
-  }
-  addEventListener("scroll", () => peek.classList.remove("on"), { passive: true });
 
   /* ---------- Quick view ---------- */
 

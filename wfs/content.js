@@ -56,7 +56,7 @@ window.EC = {
   "schedule": {
     "title": "Field Days",
     "season": "Winter 2026",
-    "lede": "Hands-on, outdoor skill-shares for kids and adults — in parks, farms, and workshops around Greater Boston. Come for one, or come every week.",
+    "lede": "Hands-on, outdoor skill-shares for kids and adults — in parks, farms, and workshops around Greater Boston. Register for one or more sessions — we'd love to have you join us.",
     "today": "2026-11-24",
     "registerHref": "https://waterbearfieldschool.org/",
     "upcoming": [
@@ -175,8 +175,8 @@ window.EC = {
         "We had a great time making various styles of zines, prints, and collages. Looking forward to the next one!"
       ],
       "images": [
-        "sessions/2026-08-28-zines/06-radicalgarden.jpg",
         "sessions/2026-08-28-zines/02-howto.jpg",
+        "sessions/2026-08-28-zines/06-radicalgarden.jpg",
         "sessions/2026-08-28-zines/01-sign.jpg",
         "sessions/2026-08-28-zines/05-alienspa.jpg",
         "sessions/2026-08-28-zines/07-table.jpg",

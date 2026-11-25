@@ -1,0 +1,267 @@
+/* Field Days, stacks variant.
+   Builds on columns.css and ../field-days/field-days.css; adds square thumbnails
+   on the schedule, one photo "stack" per past day, and a full-screen gallery. */
+
+/* ---------- Schedule rows with a square thumbnail ---------- */
+
+.row {
+  grid-template-columns: var(--date-w) auto minmax(0, 1fr) 15rem 8.5rem;
+}
+/* The whole row is the registration link. */
+a.row { color: inherit; text-decoration: none; }
+a.row .title { text-decoration: underline transparent; text-underline-offset: 0.18em; text-decoration-thickness: 1px; transition: text-decoration-color 200ms ease, color 200ms ease; }
+a.row:hover .title, a.row:focus-visible .title { color: var(--white); text-decoration-color: currentColor; }
+a.row:focus-visible { outline: 1px solid var(--white); outline-offset: 4px; }
+.row .thumb {
+  display: block;
+  width: var(--t, 9.9rem);
+  height: var(--t, 9.9rem);
+  overflow: hidden;
+  background: #111;
+}
+.row .thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.9);
+  transition: transform 500ms cubic-bezier(0.2, 0.8, 0.2, 1), filter 300ms ease;
+}
+.row:hover .thumb img { transform: scale(1.06); filter: none; }
+.row .blurb {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.row .meta-m { display: none; }
+
+@media (max-width: 1100px) {
+  .row { grid-template-columns: var(--date-w) auto minmax(0, 1fr) 12rem; }
+}
+
+@media (max-width: 760px) {
+  .row {
+    grid-template-columns: 4.4rem auto minmax(0, 1fr);
+    grid-template-areas: "date thumb txt";
+    gap: 0.3rem 0.9rem;
+    align-items: start;
+  }
+  .row .date { grid-area: date; }
+  .row .thumb { grid-area: thumb; }
+  .row .txt { grid-area: txt; }
+  .row .place, .row .time, .row .blurb { display: none; }
+  .row .meta-m {
+    display: block;
+    margin: 0.3rem 0 0;
+    font-size: 1.15rem;
+    line-height: 1.35;
+    letter-spacing: 0;
+  }
+}
+
+/* ---------- Past days: one photo each, as a little stack of prints ---------- */
+
+.entry {
+  display: grid;
+  grid-template-columns: var(--label-w) minmax(0, 1fr);
+  gap: 0 var(--gutter);
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--hair);
+  margin-bottom: 6rem;
+}
+.entry .day-label { padding-bottom: 1rem; }
+.entry .open {
+  font-size: 1.2rem;
+  letter-spacing: 0;
+  color: var(--white);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  padding-bottom: 0.1rem;
+}
+.entry .open:hover { border-bottom-color: var(--white); }
+.entry .links { display: flex; flex-wrap: wrap; gap: 0.4rem 1.4rem; align-items: baseline; }
+
+.stack-wrap {
+  display: flex;
+  justify-content: var(--align, flex-start);
+  padding: 1.2rem 1.6rem 1.6rem;
+}
+
+.stack {
+  position: relative;
+  display: block;
+  width: min(var(--w, 100%), calc(74vh * var(--arw) / var(--arh)));
+  aspect-ratio: var(--arw) / var(--arh);
+  cursor: zoom-in;
+}
+.print {
+  position: absolute;
+  inset: 0;
+  background: #111;
+  transition: transform 550ms cubic-bezier(0.2, 0.8, 0.2, 1), filter 400ms ease;
+}
+.print img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.print.p3 { transform: rotate(-2.4deg) translate(-1.6%, 1.8%); filter: brightness(0.45); }
+.print.p2 { transform: rotate(2deg) translate(1.6%, 1.2%); filter: brightness(0.6); }
+.print.p1 { box-shadow: 0 0.8rem 2.4rem rgba(0, 0, 0, 0.55); }
+
+.stack:hover .p3, .stack:focus-visible .p3 { transform: rotate(-6deg) translate(-7%, 3%); filter: brightness(0.7); }
+.stack:hover .p2, .stack:focus-visible .p2 { transform: rotate(5deg) translate(7%, 2%); filter: brightness(0.8); }
+.stack:hover .p1, .stack:focus-visible .p1 { transform: translateY(-0.4rem); }
+
+.badge {
+  position: absolute;
+  right: 0.8rem;
+  bottom: 0.8rem;
+  z-index: 2;
+  padding: 0.35rem 0.75rem 0.4rem;
+  background: rgba(0, 0, 0, 0.62);
+  color: var(--white);
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  border-radius: 99px;
+  backdrop-filter: blur(6px);
+  transition: background-color 250ms ease;
+}
+.stack:hover .badge { background: rgba(0, 0, 0, 0.85); }
+
+@supports (animation-timeline: view()) {
+  .stack-wrap {
+    animation: rise linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 100%;
+  }
+}
+
+@media (max-width: 760px) {
+  .entry { grid-template-columns: 1fr; margin-bottom: 4rem; }
+  .stack-wrap { padding: 0.6rem 0.9rem 1rem; justify-content: center; }
+  .stack { width: min(100%, calc(70vh * var(--arw) / var(--arh))); }
+}
+
+/* ---------- Full-screen gallery ---------- */
+
+.gal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: #070707;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  color: var(--fg);
+}
+.gal[hidden] { display: none; }
+
+.gal-top {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: baseline;
+  gap: 1rem;
+  margin: 0 1rem;
+  padding: 1rem 0 0.6rem;
+  border-bottom: 0.1rem solid var(--rule);
+  font-size: 1.35rem;
+  letter-spacing: 0;
+}
+.gal-title { color: var(--strong); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gal-title span { color: var(--muted); }
+.gal-count { font-variant-numeric: tabular-nums; }
+.gal-close { justify-self: end; font-size: 1.35rem; }
+.gal-close:hover { color: var(--white); }
+
+.gal-stage { position: relative; min-height: 0; min-width: 0; }
+.gal-track {
+  display: flex;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+.gal-track::-webkit-scrollbar { display: none; }
+.gal-slide {
+  flex: 0 0 100%;
+  height: 100%;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem 5rem;
+  min-width: 0;
+  container-type: size;
+}
+/* Sized from the photo's real proportions (--ar), so the box is final before the
+   full-resolution file arrives and nothing jumps when it does. */
+.gal-slide img {
+  display: block;
+  width: min(100cqw, 100cqh * var(--ar));
+  aspect-ratio: var(--ar);
+  height: auto;
+  object-fit: cover;
+}
+
+.gal-nav {
+  position: absolute;
+  top: 50%;
+  width: 36px;
+  height: 36px;
+  margin-top: -18px;
+  border-radius: 50%;
+  background: rgba(168, 168, 168, 0.55);
+  display: grid;
+  place-items: center;
+}
+.gal-nav svg { width: 18px; height: 18px; fill: none; stroke: rgba(0, 0, 0, 0.9); stroke-width: 1.5; }
+.gal-nav:hover { background: rgba(210, 210, 210, 0.85); }
+.gal-nav.prev { left: 1.2rem; }
+.gal-nav.next { right: 1.2rem; }
+.gal-nav[disabled] { opacity: 0; pointer-events: none; }
+
+.gal-strip {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: safe center;
+  overflow-x: auto;
+  padding: 0.8rem 1rem 1.2rem;
+  scrollbar-width: none;
+}
+.gal-strip::-webkit-scrollbar { display: none; }
+.gal-strip button {
+  flex: 0 0 auto;
+  width: 3.8rem;
+  height: 3.8rem;
+  opacity: 0.4;
+  transition: opacity 200ms ease, transform 200ms ease;
+  outline-offset: 2px;
+}
+.gal-strip button:hover { opacity: 0.8; }
+.gal-strip button[aria-current="true"] { opacity: 1; outline: 1px solid var(--white); }
+.gal-strip img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+@media (max-width: 760px) {
+  .gal-top { grid-template-columns: 1fr auto; }
+  .gal-title { grid-column: 1 / -1; order: 3; font-size: 1.2rem; }
+  .gal-slide { padding: 0.8rem 0.4rem; }
+  .gal-nav { display: none; }
+  .gal-strip button { width: 3.2rem; height: 3.2rem; }
+}
+
+/* View-transition timing for the photo that grows into the gallery */
+::view-transition-group(hero) {
+  animation-duration: 420ms;
+  animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: 260ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .print, .row .thumb img { transition: none; }
+  .stack-wrap { animation: none !important; }
+}

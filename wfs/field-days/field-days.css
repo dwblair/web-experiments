@@ -202,28 +202,6 @@ main { padding-top: calc(var(--head-h) + 5rem); }
 .day .cols { column-gap: 2.6rem; }
 .day .col { gap: 2.6rem; }
 
-/* ---------- Hover peek (fine pointers only) ---------- */
-
-.peek {
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: 30;
-  width: min(24vw, 360px);
-  pointer-events: none;
-  opacity: 0;
-  transform: translate3d(-999px, -999px, 0);
-  transition: opacity 180ms ease;
-}
-.peek.on { opacity: 1; }
-.peek img {
-  display: block;
-  width: 100%;
-  height: auto;
-  box-shadow: 0 1.2rem 3rem rgba(0, 0, 0, 0.6);
-}
-@media (hover: none), (pointer: coarse) { .peek { display: none; } }
-
 /* ---------- Narrow screens ---------- */
 
 @media (max-width: 1100px) {
