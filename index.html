@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Web Experiments</title>
+  <style>
+    :root { --fg: #111; --muted: #777; --bg: #fafaf8; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--fg);
+      font: 17px/1.45 ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+      padding: 2rem 1rem;
+    }
+    main { max-width: 52rem; margin: 0 auto; }
+    h1 { font-size: 1rem; font-weight: 600; margin: 0 0 0.25rem; }
+    p { margin: 0 0 2rem; color: var(--muted); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1.25rem; }
+    a.card { display: block; color: inherit; text-decoration: none; }
+    .swatch {
+      aspect-ratio: 4 / 3;
+      display: grid;
+      place-items: center;
+      font-size: 1.4rem;
+      border: 1px solid #ddd;
+      transition: transform 200ms ease;
+    }
+    a.card:hover .swatch { transform: translateY(-3px); }
+    .white { background: #fff; font-family: "Helvetica Neue", Arial, sans-serif; font-weight: 600; }
+    .black { background: #000; color: rgba(255, 255, 255, 0.85); font-family: Georgia, serif; font-weight: 300; border-color: #000; }
+    .label { margin-top: 0.6rem; }
+    .label span { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Edge Collective — layout experiments</h1>
+    <p>Two static takes on edgecollective.io, using photos and text from the edge-blog repo.</p>
+    <div class="grid">
+      <a class="card" href="collage/">
+        <div class="swatch white">Edge Collective</div>
+        <div class="label">Collage <span>— white freeform gallery, after vukdragojevic.com</span></div>
+      </a>
+      <a class="card" href="columns/">
+        <div class="swatch black">edge*collective</div>
+        <div class="label">Columns <span>— black serif two-column gallery, after jakewinkle.com</span></div>
+      </a>
+    </div>
+  </main>
+</body>
+</html>
