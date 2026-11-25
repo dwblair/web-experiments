@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Field Days — waterbear*field*school</title>
+  <meta name="description" content="Waterbear Field School — upcoming Field Days (open one for details and registration), and one photo from each day that already happened.">
+  <meta name="theme-color" content="#000000">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap">
+  <link rel="stylesheet" href="../../columns/columns.css">
+  <link rel="stylesheet" href="../field-days/field-days.css">
+  <link rel="stylesheet" href="../field-days-stacks/field-days-stacks.css">
+  <link rel="stylesheet" href="field-days-expand.css">
+</head>
+<body data-content="../" data-rows="expand">
+  <header class="top">
+    <a id="mailLink" href="#">mail</a>
+    <a class="home" id="homeLink" href="./"></a>
+    <a href="../columns/#/about">about</a>
+  </header>
+
+  <main id="main" tabindex="-1"></main>
+
+  <a class="marquee" id="marquee" href="#" target="_blank" rel="noopener">
+    <span class="marquee-track" id="marqueeTrack" aria-hidden="true"></span>
+  </a>
+
+  <div class="gal" id="gal" hidden role="dialog" aria-modal="true" aria-labelledby="galTitle">
+    <div class="gal-top">
+      <div class="gal-title" id="galTitle"></div>
+      <div class="gal-count" id="galCount" aria-live="polite"></div>
+      <button class="gal-close" id="galClose" type="button">close</button>
+    </div>
+    <div class="gal-stage">
+      <div class="gal-track" id="galTrack"></div>
+      <button class="gal-nav prev" id="galPrev" type="button" aria-label="Previous photo"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <button class="gal-nav next" id="galNext" type="button" aria-label="Next photo"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+    </div>
+    <div class="gal-strip" id="galStrip"></div>
+  </div>
+
+  <script src="../content.js"></script>
+  <script src="../images.js"></script>
+  <script src="../field-days-stacks/field-days-stacks.js"></script>
+</body>
+</html>

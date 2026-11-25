@@ -1,0 +1,232 @@
+/* Field Days, expandable rows.
+   Builds on the stacks page: each upcoming row is a button that opens a panel
+   with the fuller description, the facts, and a Register button. */
+
+.rows .item { list-style: none; }
+
+/* The row is a <button> here; make it lay out like the link rows. */
+.item .row {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  grid-template-columns: var(--date-w) auto minmax(0, 1fr) 15rem 8.5rem 2rem;
+}
+.item .row .title { display: block; transition: color 200ms ease; }
+.item .row .blurb { margin: 0.45rem 0 0; }
+.item .row:hover .title,
+.item.open .row .title { color: var(--white); }
+.item .row:focus-visible { outline: 1px solid var(--white); outline-offset: 4px; }
+
+/* + that turns into × */
+.plus {
+  position: relative;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-top: 0.55rem;
+  justify-self: end;
+  transition: transform 350ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.plus::before, .plus::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 100%;
+  height: 1px;
+  background: var(--white);
+  transform: translate(-50%, -50%);
+}
+.plus::after { transform: translate(-50%, -50%) rotate(90deg); }
+.item.open .plus { transform: rotate(45deg); }
+
+.item.open .row {
+  background: rgba(255, 255, 255, 0.035);
+  border-bottom-color: transparent;
+}
+
+/* ---------- The panel ---------- */
+
+.detail {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 450ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.item.open .detail, .entry.open .detail { grid-template-rows: 1fr; }
+.detail-in {
+  min-height: 0;
+  overflow: hidden;
+  padding-left: calc(var(--date-w) + var(--t, 9.9rem) + 3rem);
+  background: rgba(255, 255, 255, 0.035);
+}
+.item.open .detail-in { border-bottom: 1px solid var(--hair); }
+
+.detail-grid, .actions {
+  opacity: 0;
+  transform: translateY(-0.5rem);
+  transition: opacity 250ms ease, transform 400ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.item.open .detail-grid, .item.open .actions {
+  opacity: 1;
+  transform: none;
+  transition-delay: 120ms;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 32em) minmax(19rem, 1fr);
+  gap: 1rem 3.5rem;
+  padding: 0.6rem 1.5rem 0 0;
+}
+.about p {
+  margin: 0 0 0.9em;
+  font-size: 1.35rem;
+  line-height: 1.5;
+  color: var(--strong);
+}
+.facts {
+  display: grid;
+  grid-template-columns: 5.2rem minmax(0, 1fr);
+  gap: 0.55rem 1rem;
+  margin: 0.2rem 0 0;
+  font-size: 1.2rem;
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+.facts dt {
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  padding-top: 0.15rem;
+}
+.facts dd { margin: 0; color: var(--fg); }
+.facts .note { display: block; color: var(--muted); }
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.8rem;
+  padding: 1.4rem 0 2.2rem;
+}
+.register {
+  display: inline-block;
+  padding: 0.75rem 1.5rem 0.8rem;
+  border-radius: 99px;
+  background: var(--white);
+  color: #000;
+  font-size: 1.3rem;
+  letter-spacing: 0;
+  transition: background-color 200ms ease;
+}
+.register:hover { background: #d9d9d9; }
+.register span { display: inline-block; transition: transform 200ms ease; }
+.register:hover span { transform: translateX(3px); }
+.collapse {
+  font-size: 1.2rem;
+  letter-spacing: 0;
+  color: var(--fg);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  padding-bottom: 0.1rem;
+}
+.collapse:hover { color: var(--white); border-bottom-color: var(--white); }
+
+/* When another row is opened, the previous one closes instantly (no jump). */
+.no-anim .detail, .no-anim .detail-grid, .no-anim .actions, .no-anim .plus { transition: none !important; }
+
+/* Keep an opened row clear of the pinned header and marquee when scrolled into view. */
+.item {
+  scroll-margin-top: calc(var(--head-h) + 1rem);
+  scroll-margin-bottom: calc(var(--foot-h) + 1rem);
+}
+
+@media (max-width: 1100px) {
+  .item .row { grid-template-columns: var(--date-w) auto minmax(0, 1fr) 12rem 2rem; }
+  .detail-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 760px) {
+  .item .row {
+    grid-template-columns: 4.4rem auto minmax(0, 1fr) auto;
+    grid-template-areas: "date thumb txt plus";
+  }
+  .item .plus { grid-area: plus; margin-top: 0.4rem; width: 1.2rem; height: 1.2rem; }
+  .detail-in { padding-left: 0; }
+  .detail-grid { padding: 0.4rem 0.2rem 0; }
+  .about p { font-size: 1.3rem; }
+  .actions { padding: 1.2rem 0.2rem 1.8rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .detail, .detail-grid, .actions, .plus { transition: none !important; }
+}
+
+/* ---------- Journal entries: "+ Read the full entry" ---------- */
+
+/* The post opens below the entry, so don't pin the label over it. */
+.entry .day-label { position: static; }
+.entry { scroll-margin-top: calc(var(--head-h) + 1rem); }
+
+.read {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.3rem;
+  font-size: 1.2rem;
+  letter-spacing: 0;
+  color: var(--white);
+}
+.read .plus { margin-top: 0; width: 1.1rem; height: 1.1rem; }
+.read:hover .lbl, .read:focus-visible .lbl { text-decoration: underline; text-underline-offset: 0.18em; text-decoration-thickness: 1px; }
+.read:focus-visible { outline: 1px solid var(--white); outline-offset: 4px; }
+.entry.open .plus { transform: rotate(45deg); }
+
+/* The post spans the whole entry, under the label and the photo stack. */
+.entry > .post { grid-column: 1 / -1; }
+.post-in {
+  padding: 2rem 0 0;
+  background: none;
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+.entry.open .post-in { opacity: 1; transition-delay: 120ms; }
+.entry.open .actions { opacity: 1; transform: none; }
+.post-in > p {
+  max-width: 36em;
+  margin: 0 0 1.1em;
+  font-size: 1.4rem;
+  line-height: 1.6;
+  color: var(--strong);
+}
+
+.post-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+  align-items: start;
+  margin: 1.8rem 0 2.2rem;
+}
+.post-grid.captioned { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.4rem 2.6rem; }
+.post-fig { margin: 0; }
+.post-fig button { display: block; width: 100%; cursor: zoom-in; }
+.post-fig img { display: block; width: 100%; height: auto; background: #111; transition: opacity 200ms ease; }
+.post-fig button:hover img { opacity: 0.85; }
+.post-fig figcaption {
+  margin-top: 0.6rem;
+  font-size: 1.2rem;
+  line-height: 1.45;
+  letter-spacing: 0;
+  color: var(--fg);
+  max-width: 34em;
+}
+.post .actions { padding-top: 0.6rem; }
+
+@media (max-width: 760px) {
+  .post-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.8rem; }
+  .post-grid.captioned { grid-template-columns: 1fr; gap: 1.8rem; }
+  .post-in > p { font-size: 1.35rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .post-in { transition: none !important; }
+}

@@ -10,6 +10,7 @@ text from the `edge-blog` repo) and [waterbearfieldschool.org](https://waterbear
 | [`columns/`](columns/), [`wfs/columns/`](wfs/columns/) | jakewinkle.com | Black page, serif type, ruled header, two staggered columns with "Title, Year" captions, scrolling marquee |
 | [`wfs/field-days/`](wfs/field-days/) | both | Field Days schedule, a "today" line, then past days as a timeline: date and title pinned left, photos in staggered columns |
 | [`wfs/field-days-stacks/`](wfs/field-days-stacks/) | both | Same schedule with a square thumbnail per row (sized to the text beside it); each past day is one photo drawn as a stack of prints that grows into a swipeable full-screen gallery. `#<slug>` or `#<slug>/<n>` links straight to a day's gallery |
+| [`wfs/field-days-expand/`](wfs/field-days-expand/) | both | The stacks page, but each upcoming listing opens in place to a fuller description (who it's for, what to bring, where) with a Register button, and closes again with ×, Close, or Escape. `#d-YYYY-MM-DD` opens a listing. Journal entries get the same + : "Read the full entry" opens the day's full post (text, then photos with their original captions; any photo opens the gallery there). Same script as the stacks page, switched on by `<body data-rows="expand">` |
 
 The `collage/` and `columns/` folders hold the shared engine (CSS + JS) as well as the
 Edge Collective pages; the WFS pages load the same engine with different content.
@@ -38,7 +39,8 @@ Each site has a content folder: `assets/` (Edge Collective) and `wfs/` (Waterbea
   `window.EC = { ...JSON... };`, so keep it valid JSON. `site` holds the per-site
   settings (name, nav order, caption wording, marquee, about sections, where images
   come from); `projects` holds the galleries. WFS also has `schedule` for the Field Days
-  page — **its upcoming dates are placeholders.**
+  pages — **its upcoming dates are placeholders** — and each past day has a `post`
+  (paragraphs and photos, built from the wfs-site write-ups) for the expandable journal.
 - `images.js` — generated; maps each image ref to its resized files and size.
 - `img/` — generated; resized copies (1600px and 800px), EXIF stripped.
 

@@ -10,7 +10,7 @@
   --link: rgba(0, 118, 255, 0.9);
   --gutter: 8.6rem;
   --head-h: 3.6rem;
-  --foot-h: 3.6rem;
+  --foot-h: 4.4rem;
   color-scheme: dark;
 }
 
@@ -212,7 +212,7 @@ h1 {
   z-index: 20;
   background: var(--bg);
   overflow: hidden;
-  padding: 0.4rem 0 1.4rem;
+  padding: 1.2rem 0 1.4rem;
   color: var(--white);
   font-size: 1.25rem;
   line-height: 1;
