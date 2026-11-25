@@ -17,6 +17,7 @@
     }
     main { max-width: 52rem; margin: 0 auto; }
     h1 { font-size: 1rem; font-weight: 600; margin: 0 0 0.25rem; }
+    h1.next { margin-top: 3.5rem; }
     p { margin: 0 0 2rem; color: var(--muted); }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1.25rem; }
     a.card { display: block; color: inherit; text-decoration: none; }
@@ -31,13 +32,17 @@
     a.card:hover .swatch { transform: translateY(-3px); }
     .white { background: #fff; font-family: "Helvetica Neue", Arial, sans-serif; font-weight: 600; }
     .black { background: #000; color: rgba(255, 255, 255, 0.85); font-family: Georgia, serif; font-weight: 300; border-color: #000; }
+    .sched { background: #000; color: rgba(255, 255, 255, 0.85); font-family: Georgia, serif; border-color: #000; place-items: stretch; padding: 1rem 1.1rem; font-size: 0.8rem; }
+    .sched b { font-weight: 300; font-size: 1.9rem; line-height: 1; }
+    .sched span { display: flex; gap: 0.6rem; border-top: 1px solid rgba(255, 255, 255, 0.25); padding-top: 0.3rem; }
+    .sched i { font-style: normal; opacity: 0.6; }
     .label { margin-top: 0.6rem; }
     .label span { color: var(--muted); }
   </style>
 </head>
 <body>
   <main>
-    <h1>Edge Collective — layout experiments</h1>
+    <h1>Edge Collective</h1>
     <p>Two static takes on edgecollective.io, using photos and text from the edge-blog repo.</p>
     <div class="grid">
       <a class="card" href="collage/">
@@ -47,6 +52,23 @@
       <a class="card" href="columns/">
         <div class="swatch black">edge*collective</div>
         <div class="label">Columns <span>— black serif two-column gallery, after jakewinkle.com</span></div>
+      </a>
+    </div>
+
+    <h1 class="next">Waterbear Field School</h1>
+    <p>The same two layouts for waterbearfieldschool.org, from the wfs-site repo — plus a Field Days page that starts as a schedule and turns into a photo timeline.</p>
+    <div class="grid">
+      <a class="card" href="wfs/collage/">
+        <div class="swatch white">Waterbear Field School</div>
+        <div class="label">Collage <span>— freeform gallery</span></div>
+      </a>
+      <a class="card" href="wfs/columns/">
+        <div class="swatch black">waterbear*field*school</div>
+        <div class="label">Columns <span>— two-column gallery</span></div>
+      </a>
+      <a class="card" href="wfs/field-days/">
+        <div class="swatch sched"><b>Field Days</b><span><i>27</i> Off-Grid Fridays</span><span><i>28</i> Cold Frames</span><span><i>01</i> Solar Bench</span></div>
+        <div class="label">Field Days <span>— schedule into photo timeline</span></div>
       </a>
     </div>
   </main>

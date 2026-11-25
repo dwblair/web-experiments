@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
-"""Copy the images referenced in assets/content.js into assets/img/, resized.
+"""Copy the images referenced in a content.js file into img/ beside it, resized.
 
-Image refs in content.js are paths relative to the edge-blog repo's img/
-folder (e.g. "ojofeliz/ofr1.jpeg"), or "~/..." paths for files elsewhere.
+Image refs (any "image" string, or string in an "images"/"photos" list) are paths relative to
+the folder named by site.imageSource in that content.js (e.g. edge-blog/img),
+or "~/..." paths for files elsewhere.
 
 For each ref this writes two JPEGs (EXIF stripped, orientation applied):
-    assets/img/<dir>/<name>.jpg      long edge <= 1600px
-    assets/img/<dir>/<name>.sm.jpg   long edge <= 800px
-and records sizes in assets/images.js, which the pages load.
+    <content dir>/img/<dir>/<name>.jpg      long edge <= 1600px
+    <content dir>/img/<dir>/<name>.sm.jpg   long edge <= 800px
+and records sizes in <content dir>/images.js, which the pages load.
 
-Usage:  python3 scripts/import_images.py [--edge-blog PATH] [--force]
+Usage:
+    python3 scripts/import_images.py                    # assets/content.js (Edge Collective)
+    python3 scripts/import_images.py wfs/content.js     # Waterbear Field School
+    python3 scripts/import_images.py wfs/content.js --source DIR --force
 """
 import argparse
 import json
@@ -20,21 +24,18 @@ from pathlib import Path
 from PIL import Image, ImageOps
 
 ROOT = Path(__file__).resolve().parent.parent
-CONTENT = ROOT / "assets" / "content.js"
-OUT_DIR = ROOT / "assets" / "img"
-MANIFEST = ROOT / "assets" / "images.js"
 
 SIZES = {"": (1600, 80), ".sm": (800, 76)}  # suffix -> (long edge, jpeg quality)
 
 
-def load_content():
-    text = CONTENT.read_text()
+def load_content(path):
+    text = path.read_text()
     start = text.index("{")
     end = text.rindex("}") + 1
     return json.loads(text[start:end])
 
 
-def resolve(ref, edge_img):
+def resolve(ref, src_root):
     if ref.startswith("~"):
         src = Path(os.path.expanduser(ref))
         # "~/gitwork/mesh-water-level/img/x.png" -> "mesh-water-level/x"
@@ -42,9 +43,25 @@ def resolve(ref, edge_img):
         repo = parts[parts.index("gitwork") + 1] if "gitwork" in parts else src.parent.name
         dest = f"{repo}/{src.stem}"
     else:
-        src = edge_img / ref
+        src = src_root / ref
         dest = str(Path(ref).with_suffix(""))
     return src, dest.lower().replace(" ", "_")
+
+
+def collect_refs(node, out):
+    """Every string inside an "images" or "photos" list, anywhere in the content."""
+    if isinstance(node, dict):
+        for k, v in node.items():
+            if k in ("images", "photos") and isinstance(v, list):
+                out.extend(x for x in v if isinstance(x, str))
+            elif k == "image" and isinstance(v, str):
+                out.append(v)
+            else:
+                collect_refs(v, out)
+    elif isinstance(node, list):
+        for v in node:
+            collect_refs(v, out)
+    return out
 
 
 def flatten(im):
@@ -59,17 +76,23 @@ def flatten(im):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--edge-blog", default=os.path.expanduser("~/gitwork/edge-blog"))
+    ap.add_argument("content", nargs="?", default="assets/content.js")
+    ap.add_argument("--source", help="image folder (default: site.imageSource in content.js)")
     ap.add_argument("--force", action="store_true")
     args = ap.parse_args()
-    edge_img = Path(args.edge_blog) / "img"
 
-    content = load_content()
-    refs = [r for p in content["projects"] for r in p["images"]]
+    content_path = (ROOT / args.content).resolve()
+    base = content_path.parent
+    out_dir, manifest_path = base / "img", base / "images.js"
+    content = load_content(content_path)
+    source = args.source or content["site"].get("imageSource", "~/gitwork/edge-blog/img")
+    src_root = Path(os.path.expanduser(source))
+
+    refs = collect_refs(content, [])
     manifest, missing = {}, []
 
     for ref in dict.fromkeys(refs):
-        src, dest = resolve(ref, edge_img)
+        src, dest = resolve(ref, src_root)
         if not src.exists():
             missing.append(ref)
             continue
@@ -77,24 +100,24 @@ def main():
         with Image.open(src) as raw:
             im = flatten(raw)
         for suffix, (edge, quality) in SIZES.items():
-            out = OUT_DIR / f"{dest}{suffix}.jpg"
+            out = out_dir / f"{dest}{suffix}.jpg"
             out.parent.mkdir(parents=True, exist_ok=True)
             scaled = im.copy()
             scaled.thumbnail((edge, edge), Image.LANCZOS)
             if args.force or not out.exists() or out.stat().st_mtime < src.stat().st_mtime:
                 scaled.save(out, "JPEG", quality=quality, optimize=True, progressive=True)
             key = "src" if suffix == "" else "sm"
-            entry[key] = str(out.relative_to(ROOT / "assets"))
+            entry[key] = str(out.relative_to(base))
             if suffix == "":
                 entry["w"], entry["h"] = scaled.size
         manifest[ref] = entry
         print(f"  {ref} -> {entry['src']} ({entry['w']}x{entry['h']})")
 
-    MANIFEST.write_text(
+    manifest_path.write_text(
         "// Generated by scripts/import_images.py -- do not edit by hand.\n"
         "window.EC_IMAGES = " + json.dumps(manifest, indent=1, ensure_ascii=False) + ";\n"
     )
-    print(f"\n{len(manifest)} images -> {MANIFEST.relative_to(ROOT)}")
+    print(f"\n{len(manifest)} images -> {manifest_path.relative_to(ROOT)}")
     if missing:
         print("MISSING:", *missing, sep="\n  ", file=sys.stderr)
         sys.exit(1)

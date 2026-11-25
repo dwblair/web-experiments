@@ -2,51 +2,149 @@ window.EC = {
   "site": {
     "name": "Edge Collective",
     "short": "edge*collective",
+    "domain": "edgecollective.io",
     "email": "collaborate@edgecollective.io",
     "origin": "https://edgecollective.io",
     "tagline": "A distributed research, teaching, and facilitation cooperative.",
+    "imageSource": "~/gitwork/edge-blog/img",
+    "moreLabel": "Full notes on edgecollective.io",
+    "overviewOrder": [
+      "ojo-feliz",
+      "crate-cart",
+      "newfound-lake",
+      "bike-kitchen",
+      "mesh-water-level",
+      "olathe",
+      "mobile-workshop",
+      "quahog",
+      "biochar",
+      "wolfes-neck",
+      "bike-trailers",
+      "co2",
+      "new-orleans",
+      "vale-da-lama",
+      "mead",
+      "mothbot",
+      "belfast-pie",
+      "maps"
+    ],
+    "captionFrom": {
+      "projects": "From the project",
+      "field": "From the field notes",
+      "hardware": "From the prototype",
+      "workshops": "From"
+    },
+    "marquee": {
+      "items": [
+        "OPEN HARDWARE KITS 4 SALE",
+        "EDGECOLLECTIVE.IO/SHOP"
+      ],
+      "href": "https://edgecollective.io/shop/",
+      "label": "Open hardware kits for sale at edgecollective.io/shop"
+    },
     "about": [
       "Edge Collective is a distributed research, teaching, and facilitation cooperative. We help individuals and communities adapt their vital food, water, energy, and communications infrastructure to challenging environments.",
       "Our work aims to enhance local technological sovereignty (autonomy, control) while also promoting global technological solidarity (collaboration, mutual aid). We develop free and open source designs — software, hardware, mechanical; we retrofit, repair, and extend existing infrastructure; and we teach, through workshops, videos, documentation, and meet-ups.",
       "All of the research, designs, and code that we produce are freely available online. We support our work through grants, donations, and pay-if-or-as-you-can arrangements. If you'd like to work on a project together, please reach out."
     ],
-    "focus": [
-      "Off-grid farming — soil moisture, greenhouse temperature",
-      "Flood mitigation — alert systems for coastal and urban municipalities",
-      "Water quality — salinity, filtration, and drinking-water testing",
-      "Conservation ecology — climate impacts on vulnerable species"
+    "sections": [
+      {
+        "title": "Recently",
+        "items": [
+          {
+            "text": "Off-grid farming — soil moisture, greenhouse temperature"
+          },
+          {
+            "text": "Flood mitigation — alert systems for coastal and urban municipalities"
+          },
+          {
+            "text": "Water quality — salinity, filtration, and drinking-water testing"
+          },
+          {
+            "text": "Conservation ecology — climate impacts on vulnerable species"
+          }
+        ]
+      },
+      {
+        "title": "Talks and Events",
+        "items": [
+          {
+            "text": "Reducing the risk of SARS-CoV-2 and flu transmission in the classroom",
+            "href": "https://edgecollective.io/talks/umass/",
+            "note": "UMass Amherst Physics STEM Seminar, 2021"
+          },
+          {
+            "text": "Projects in Engineering",
+            "href": "https://edgecollective.io/talks/belfast/",
+            "note": "Belfast High School, 2021"
+          },
+          {
+            "text": "Using Dat & the Hyper Stack in Agroecology",
+            "href": "https://edgecollective.io/talks/datcon2020/",
+            "note": "Dat Conference, 2020"
+          },
+          {
+            "text": "Design Patterns for Degrowth ICT",
+            "href": "https://edgecollective.io/talks/degrowthvienna_2020/",
+            "note": "Degrowth Vienna, 2020"
+          },
+          {
+            "text": "Stewarding Technological Freedom in Agriculture",
+            "href": "https://edgecollective.io/talks/libreplanet_2020/",
+            "note": "LibrePlanet, 2020"
+          }
+        ]
+      },
+      {
+        "title": "Shop",
+        "paras": [
+          "Open hardware kits, assembled or as bare boards: Rook v4 LoRa board, Mesh Radio Water Level Kit, LoRa Mesh Radio Kit, Outdoor Repeater Kit, CO2 Monitor Kit, Water Quality Sensor Kit, Solar Charge Controller."
+        ],
+        "items": [
+          {
+            "text": "edgecollective.io/shop",
+            "href": "https://edgecollective.io/shop/"
+          }
+        ]
+      }
     ],
     "links": [
-      { "label": "GitHub", "href": "https://github.com/edgecollective" },
-      { "label": "Open Collective", "href": "https://opencollective.com/edgecollective" },
-      { "label": "Shop", "href": "https://edgecollective.io/shop/" },
-      { "label": "Journal", "href": "https://edgecollective.io/journal/" }
-    ],
-    "talks": [
-      { "title": "Reducing the risk of SARS-CoV-2 and flu transmission in the classroom", "where": "UMass Amherst Physics STEM Seminar", "year": "2021", "href": "https://edgecollective.io/talks/umass/" },
-      { "title": "Projects in Engineering", "where": "Belfast High School", "year": "2021", "href": "https://edgecollective.io/talks/belfast/" },
-      { "title": "Using Dat & the Hyper Stack in Agroecology", "where": "Dat Conference", "year": "2020", "href": "https://edgecollective.io/talks/datcon2020/" },
-      { "title": "Design Patterns for Degrowth ICT", "where": "Degrowth Vienna", "year": "2020", "href": "https://edgecollective.io/talks/degrowthvienna_2020/" },
-      { "title": "Stewarding Technological Freedom in Agriculture", "where": "LibrePlanet", "year": "2020", "href": "https://edgecollective.io/talks/libreplanet_2020/" }
-    ],
-    "kits": [
-      "Rook v4 LoRa board",
-      "Mesh Radio Water Level Kit",
-      "LoRa Mesh Radio Kit",
-      "Outdoor Repeater Kit",
-      "CO2 Monitor Kit",
-      "Water Quality Sensor Kit",
-      "Solar Charge Controller"
+      {
+        "label": "GitHub",
+        "href": "https://github.com/edgecollective"
+      },
+      {
+        "label": "Open Collective",
+        "href": "https://opencollective.com/edgecollective"
+      },
+      {
+        "label": "Shop",
+        "href": "https://edgecollective.io/shop/"
+      },
+      {
+        "label": "Journal",
+        "href": "https://edgecollective.io/journal/"
+      }
     ]
   },
-
   "categories": [
-    { "id": "projects", "label": "Projects" },
-    { "id": "field", "label": "Field Work" },
-    { "id": "hardware", "label": "Hardware" },
-    { "id": "workshops", "label": "Workshops" }
+    {
+      "id": "projects",
+      "label": "Projects"
+    },
+    {
+      "id": "field",
+      "label": "Field Work"
+    },
+    {
+      "id": "hardware",
+      "label": "Hardware"
+    },
+    {
+      "id": "workshops",
+      "label": "Workshops"
+    }
   ],
-
   "projects": [
     {
       "slug": "ojo-feliz",

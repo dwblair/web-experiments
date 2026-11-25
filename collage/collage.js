@@ -8,7 +8,8 @@
 (() => {
   const { site, categories, projects } = window.EC;
   const IM = window.EC_IMAGES || {};
-  const ASSETS = "../assets/";
+  // Where images.js paths are rooted, relative to this page (set on <body data-content>).
+  const ASSETS = document.body.dataset.content || "../assets/";
 
   const $ = (sel, el = document) => el.querySelector(sel);
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -20,20 +21,12 @@
   const nav = $("#nav");
   const sideLabel = $("#sideLabel");
   const sideFoot = $("#sideFoot");
+  $(".name").textContent = site.name;
 
-  // Curated order for the overview, mixing categories so the collage varies.
-  const OVERVIEW = [
-    "ojo-feliz", "crate-cart", "newfound-lake", "bike-kitchen", "mesh-water-level",
-    "olathe", "mobile-workshop", "quahog", "biochar", "wolfes-neck", "bike-trailers",
-    "co2", "new-orleans", "vale-da-lama", "mead", "mothbot", "belfast-pie", "maps",
-  ];
-
-  const FROM = {
-    projects: "From the project",
-    field: "From the field notes",
-    hardware: "From the prototype",
-    workshops: "From",
-  };
+  // Order for the overview (curated in content.js so the collage mixes categories).
+  const OVERVIEW = site.overviewOrder || projects.map((p) => p.slug);
+  // Caption prefix per category, e.g. "From the project".
+  const FROM = site.captionFrom || {};
 
   /* ---------- Seeded randomness, so each page always lays out the same way ---------- */
 
@@ -226,6 +219,18 @@
   const pageFoot = (extra = "") =>
     `<div class="page-foot">${extra}<button type="button" data-top>&uarr; Back to Top</button></div>`;
 
+  // A content.js section: { title, paras?: [..], items?: [{ text, href?, note? }] }
+  function sectionBody(sec, dash = "—") {
+    const paras = (sec.paras || []).map((t) => `<p>${esc(t)}</p>`).join("");
+    const items = (sec.items || []).map((it) => {
+      const text = it.href
+        ? `<a href="${esc(it.href)}"${it.href.startsWith("#") ? "" : ' target="_blank" rel="noopener"'}>${esc(it.text)}</a>`
+        : esc(it.text);
+      return `<li>${text}${it.note ? ` <span class="muted">${dash} ${esc(it.note)}</span>` : ""}</li>`;
+    }).join("");
+    return paras + (items ? `<ul>${items}</ul>` : "");
+  }
+
   /* ---------- Pages ---------- */
 
   function overview() {
@@ -236,7 +241,7 @@
           ref,
           alt: p.title,
           href: `#/p/${p.slug}`,
-          caption: i === 0 ? `${FROM[p.category]} <i><a href="#/p/${p.slug}">${esc(p.title)}</a></i>` : "",
+          caption: i === 0 ? `${FROM[p.category] || "From"} <i><a href="#/p/${p.slug}">${esc(p.title)}</a></i>` : "",
         });
       });
     });
@@ -284,7 +289,7 @@
     main.insertAdjacentHTML(
       "beforeend",
       `<div class="prose project-text">${rest}${meta}
-        <p><a href="${esc(p.href)}" target="_blank" rel="noopener">Full notes on edgecollective.io &nearr;</a></p></div>` +
+        <p><a href="${esc(p.href)}" target="_blank" rel="noopener">${esc(site.moreLabel || "Read more")} &nearr;</a></p></div>` +
       pageFoot(`<a href="#/c/${cat.id}">&larr; Back to ${esc(cat.label)}</a>`)
     );
     main.querySelectorAll("[data-quick]").forEach((b) =>
@@ -306,21 +311,15 @@
   }
 
   function info() {
-    const li = (arr) => `<ul>${arr.join("")}</ul>`;
     main.innerHTML = `
       <div class="prose">
         <h1 class="headline">${esc(site.name)}</h1>
         ${site.about.map((t) => `<p>${esc(t)}</p>`).join("")}
-        <h2>Recently</h2>
-        ${li(site.focus.map((f) => `<li>${esc(f)}</li>`))}
-        <h2>Talks</h2>
-        ${li(site.talks.map((t) => `<li><a href="${esc(t.href)}" target="_blank" rel="noopener">${esc(t.title)}</a> <span class="muted">— ${esc(t.where)}, ${esc(t.year)}</span></li>`))}
-        <h2>Kits in the shop</h2>
-        ${li(site.kits.map((k) => `<li>${esc(k)}</li>`))}
+        ${(site.sections || []).map((sec) => `<h2>${esc(sec.title)}</h2>${sectionBody(sec, "—")}`).join("")}
         <h2>Contact</h2>
         <p><a href="mailto:${esc(site.email)}">${esc(site.email)}</a></p>
         <h2>Elsewhere</h2>
-        ${li(site.links.map((l) => `<li><a href="${esc(l.href)}" target="_blank" rel="noopener">${esc(l.label)}</a></li>`))}
+        ${sectionBody({ items: site.links.map((l) => ({ text: l.label, href: l.href })) })}
       </div>` + pageFoot();
     setChrome({ active: "info", foot: indexLink });
     document.title = `Info — ${site.name}`;

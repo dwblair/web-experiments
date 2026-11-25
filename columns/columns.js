@@ -6,7 +6,8 @@
 (() => {
   const { site, categories, projects } = window.EC;
   const IM = window.EC_IMAGES || {};
-  const ASSETS = "../assets/";
+  // Where images.js paths are rooted, relative to this page (set on <body data-content>).
+  const ASSETS = document.body.dataset.content || "../assets/";
 
   const $ = (sel, el = document) => el.querySelector(sel);
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -15,12 +16,8 @@
   const main = $("#main");
   const narrow = matchMedia("(max-width: 760px)");
 
-  // Curated order for the home page.
-  const ORDER = [
-    "ojo-feliz", "mesh-water-level", "crate-cart", "mobile-workshop", "bike-kitchen",
-    "biochar", "newfound-lake", "bike-trailers", "olathe", "co2", "quahog",
-    "new-orleans", "wolfes-neck", "mothbot", "vale-da-lama", "belfast-pie", "mead", "maps",
-  ];
+  // Curated order for the home page (from content.js), then anything not listed.
+  const ORDER = site.overviewOrder || [];
   const ordered = [
     ...ORDER.map((s) => bySlug[s]).filter(Boolean),
     ...projects.filter((p) => !ORDER.includes(p.slug)),
@@ -28,8 +25,13 @@
 
   $("#mailLink").href = `mailto:${site.email}`;
 
+  $(".top .home").textContent = site.short;
+
   // Marquee: the phrase repeated enough to overfill, then doubled for a seamless loop.
-  const phrase = ["OPEN HARDWARE KITS 4 SALE", "•", "EDGECOLLECTIVE.IO/SHOP", "•"];
+  const mq = site.marquee || { items: [site.domain || site.name], href: site.origin };
+  $("#marquee").href = mq.href;
+  $("#marquee").setAttribute("aria-label", mq.label || mq.items.join(" — "));
+  const phrase = mq.items.flatMap((t) => [t, "•"]);
   const run = Array(4).fill(phrase).flat().map((t) => `<span>${t}</span>`).join("");
   $("#marqueeTrack").innerHTML = run + run;
 
@@ -98,11 +100,23 @@
     if (e.key === "ArrowLeft") showQuick(qIndex - 1);
   });
 
+  // A content.js section: { title, paras?: [..], items?: [{ text, href?, note? }] }
+  function sectionBody(sec) {
+    const paras = (sec.paras || []).map((t) => `<p>${esc(t)}</p>`).join("");
+    const items = (sec.items || []).map((it) => {
+      const text = it.href
+        ? `<a href="${esc(it.href)}"${it.href.startsWith("#") ? "" : ' target="_blank" rel="noopener"'}>${esc(it.text)}</a>`
+        : esc(it.text);
+      return `<li>${text}${it.note ? ` <span class="muted">– ${esc(it.note)}</span>` : ""}</li>`;
+    }).join("");
+    return paras + (items ? `<ul>${items}</ul>` : "");
+  }
+
   /* ---------- Pages ---------- */
 
   const thanks = () => `
     <footer class="thanks">
-      <div>thank you for visiting edgecollective.io</div>
+      <div>thank you for visiting ${esc(site.domain || site.name)}</div>
       <div class="links">${site.links.map((l) => `<a href="${esc(l.href)}" target="_blank" rel="noopener">${esc(l.label)}</a>`).join("")}</div>
       <div>&copy; ${esc(site.short)} ${new Date().getFullYear()}</div>
     </footer>`;
@@ -140,7 +154,7 @@
         <div class="bodycopy">
           ${p.text.map((t) => `<p>${esc(t)}</p>`).join("")}
           ${meta}
-          <p><a href="${esc(p.href)}" target="_blank" rel="noopener">Read the full notes</a></p>
+          <p><a href="${esc(p.href)}" target="_blank" rel="noopener">${esc(site.moreLabel || "Read more")}</a></p>
         </div>
         ${columns(cards, 0.06)}
         <nav class="proj-nav" aria-label="More projects">
@@ -159,22 +173,17 @@
       <section>
         <h2>${esc(c.label)}</h2>
         <ul class="work">${projects.filter((p) => p.category === c.id)
-          .map((p) => `<li><a href="#/p/${p.slug}">${esc(p.title)}</a> <span class="muted">– ${esc(p.kind)}, ${esc(p.year)}</span></li>`).join("")}</ul>
+          .map((p) => `<li><a href="#/p/${p.slug}">${esc(p.title)}</a> <span class="muted">– ${p.kind ? `${esc(p.kind)}, ` : ""}${esc(p.year)}</span></li>`).join("")}</ul>
       </section>`).join("");
 
     main.innerHTML = `
       <div class="about">
         <p class="lede">${esc(site.about[0])}</p>
-        <section><h2>About</h2><div>${site.about.slice(1).map((t) => `<p>${esc(t)}</p>`).join("")}</div></section>
-        <section><h2>Recently</h2><ul>${site.focus.map((f) => `<li>${esc(f)}</li>`).join("")}</ul></section>
+        ${site.about.length > 1 ? `<section><h2>About</h2><div>${site.about.slice(1).map((t) => `<p>${esc(t)}</p>`).join("")}</div></section>` : ""}
         ${work}
-        <section><h2>Talks and Events</h2><ul>${site.talks.map((t) =>
-          `<li><a href="${esc(t.href)}" target="_blank" rel="noopener">${esc(t.title)}</a> <span class="muted">– ${esc(t.where)}, ${esc(t.year)}</span></li>`).join("")}</ul></section>
-        <section><h2>Shop</h2><div><p>Open hardware kits, assembled or as bare boards: ${site.kits.map(esc).join(", ")}.</p>
-          <p><a href="https://edgecollective.io/shop/" target="_blank" rel="noopener">edgecollective.io/shop</a></p></div></section>
+        ${(site.sections || []).map((sec) => `<section><h2>${esc(sec.title)}</h2><div>${sectionBody(sec)}</div></section>`).join("")}
         <section><h2>Mail</h2><p><a href="mailto:${esc(site.email)}">${esc(site.email)}</a></p></section>
-        <section><h2>Elsewhere</h2><ul>${site.links.map((l) =>
-          `<li><a href="${esc(l.href)}" target="_blank" rel="noopener">${esc(l.label)}</a></li>`).join("")}</ul></section>
+        <section><h2>Elsewhere</h2>${sectionBody({ items: site.links.map((l) => ({ text: l.label, href: l.href })) })}</section>
       </div>` + thanks();
     document.title = `about — ${site.short}`;
   }

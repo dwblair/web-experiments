@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Waterbear Field School</title>
+  <meta name="description" content="Waterbear Field School — outdoor resilience skill-share for kids and adults.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&display=swap">
+  <link rel="stylesheet" href="../../collage/collage.css">
+</head>
+<body data-content="../">
+  <aside class="side" id="side">
+    <div class="side-top">
+      <a class="name" href="#/">Edge Collective</a>
+      <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="side">Menu</button>
+    </div>
+    <nav class="nav" id="nav" aria-label="Sections"></nav>
+    <div class="side-label" id="sideLabel"></div>
+    <div class="side-foot" id="sideFoot"></div>
+  </aside>
+
+  <main id="main" tabindex="-1"></main>
+
+  <div class="quick" id="quick" hidden aria-modal="true" role="dialog" aria-label="Image viewer">
+    <img class="quick-img" id="quickImg" alt="">
+    <button class="quick-nav prev" id="quickPrev" aria-label="Previous image"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button class="quick-nav next" id="quickNext" aria-label="Next image"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+    <button class="quick-close" id="quickClose" aria-label="Close">Close</button>
+    <div class="quick-cap"><span id="quickCap"></span></div>
+  </div>
+
+  <script src="../content.js"></script>
+  <script src="../images.js"></script>
+  <script src="../../collage/collage.js"></script>
+</body>
+</html>

@@ -1,0 +1,274 @@
+/* Field Days — a schedule that turns into a photo timeline.
+   Builds on ../../columns/columns.css (palette, header, marquee, cards, quick view). */
+
+:root {
+  --date-w: 7.5rem;
+  --label-w: 24rem;
+  --hair: rgba(255, 255, 255, 0.22);
+}
+
+main { padding-top: calc(var(--head-h) + 5rem); }
+
+/* ---------- Hero ---------- */
+
+.fd-hero {
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 30em);
+  gap: 2rem var(--gutter);
+  align-items: end;
+  margin-bottom: 5rem;
+}
+.fd-hero h1 {
+  font-size: clamp(4rem, 9vw, 9.5rem);
+  font-weight: 200;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+.fd-hero p {
+  margin: 0;
+  font-size: 1.55rem;
+  line-height: 1.35;
+  letter-spacing: 0;
+  color: var(--strong);
+}
+
+/* ---------- Shared date block ---------- */
+
+.date {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.6rem;
+  align-items: start;
+  letter-spacing: 0;
+}
+.date .d {
+  font-size: 3.6rem;
+  font-weight: 200;
+  line-height: 0.85;
+  color: var(--white);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.date .wm {
+  font-size: 1.05rem;
+  line-height: 1.25;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding-top: 0.2rem;
+}
+
+.kicker {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 1.05rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+/* ---------- Upcoming rows ---------- */
+
+.rows { list-style: none; margin: 0; padding: 0; }
+.row {
+  display: grid;
+  grid-template-columns: var(--date-w) minmax(0, 1fr) 15rem 8.5rem 7.5rem;
+  gap: 1.5rem;
+  align-items: start;
+  padding: 1.5rem 0 1.4rem;
+  border-bottom: 1px solid var(--hair);
+  transition: background-color 250ms ease;
+}
+.row:hover { background: rgba(255, 255, 255, 0.035); }
+.row .title {
+  font-size: 2rem;
+  font-weight: 300;
+  line-height: 1.1;
+  color: var(--strong);
+  letter-spacing: 0;
+}
+.row .blurb {
+  margin: 0.45rem 0 0;
+  font-size: 1.2rem;
+  line-height: 1.4;
+  color: var(--muted);
+  max-width: 34em;
+}
+.row .place, .row .time {
+  font-size: 1.2rem;
+  line-height: 1.35;
+  letter-spacing: 0;
+  padding-top: 0.35rem;
+}
+.row .go {
+  justify-self: end;
+  padding-top: 0.35rem;
+  font-size: 1.2rem;
+  letter-spacing: 0;
+  color: var(--white);
+  white-space: nowrap;
+  border-bottom: 1px solid transparent;
+}
+.row .go:hover { border-bottom-color: var(--white); }
+.row .go span { display: inline-block; transition: transform 200ms ease; }
+.row:hover .go span { transform: translateX(4px); }
+
+/* ---------- Today ---------- */
+
+.today {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin: 5rem 0 4rem;
+  font-size: 1.05rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--white);
+}
+.today::before, .today::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+.today .dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: #5bd18b;
+  box-shadow: 0 0 0 0 rgba(91, 209, 139, 0.6);
+  animation: pulse 2.4s ease-out infinite;
+}
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(91, 209, 139, 0.55); }
+  70%, 100% { box-shadow: 0 0 0 0.8rem rgba(91, 209, 139, 0); }
+}
+
+/* ---------- Past days: label pinned left, photos right ---------- */
+
+.year {
+  font-size: clamp(3rem, 6vw, 6rem);
+  font-weight: 200;
+  line-height: 1;
+  color: var(--strong);
+  margin: 7rem 0 1rem;
+  letter-spacing: -0.01em;
+}
+.year small {
+  font-size: 1.05rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--fg);
+  margin-left: 1rem;
+  vertical-align: middle;
+}
+
+.day {
+  display: grid;
+  grid-template-columns: var(--label-w) minmax(0, 1fr);
+  gap: 0 var(--gutter);
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--hair);
+  margin-bottom: 7rem;
+}
+.day-label {
+  position: sticky;
+  top: calc(var(--head-h) + 1.5rem);
+  align-self: start;
+  padding-bottom: 2rem;
+}
+.day-label .date { margin-bottom: 1.1rem; }
+.day-label h2 {
+  font-size: 2rem;
+  font-weight: 300;
+  line-height: 1.1;
+  color: var(--strong);
+  letter-spacing: 0;
+  margin: 0 0 0.5rem;
+}
+.day-label .where {
+  font-size: 1.2rem;
+  line-height: 1.35;
+  letter-spacing: 0;
+  color: var(--muted);
+  margin: 0 0 1.1rem;
+}
+.day-label p { font-size: 1.25rem; line-height: 1.45; margin: 0 0 1rem; }
+.day-label .more { font-size: 1.2rem; letter-spacing: 0; color: var(--link); }
+.day-label .more:hover { text-decoration: underline; text-underline-offset: 0.15em; }
+.day-label .count { font-size: 1.05rem; color: var(--muted); letter-spacing: 0.04em; }
+
+.day .cols { column-gap: 2.6rem; }
+.day .col { gap: 2.6rem; }
+
+/* ---------- Hover peek (fine pointers only) ---------- */
+
+.peek {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 30;
+  width: min(24vw, 360px);
+  pointer-events: none;
+  opacity: 0;
+  transform: translate3d(-999px, -999px, 0);
+  transition: opacity 180ms ease;
+}
+.peek.on { opacity: 1; }
+.peek img {
+  display: block;
+  width: 100%;
+  height: auto;
+  box-shadow: 0 1.2rem 3rem rgba(0, 0, 0, 0.6);
+}
+@media (hover: none), (pointer: coarse) { .peek { display: none; } }
+
+/* ---------- Narrow screens ---------- */
+
+@media (max-width: 1100px) {
+  .row { grid-template-columns: var(--date-w) minmax(0, 1fr) 12rem 7rem; }
+  .row .time { display: none; }
+  :root { --label-w: 18rem; }
+}
+
+@media (max-width: 760px) {
+  main { padding-top: calc(var(--head-h) + 2.5rem); }
+  .fd-hero { grid-template-columns: 1fr; margin-bottom: 3rem; }
+  .row {
+    grid-template-columns: 5.2rem minmax(0, 1fr);
+    gap: 0.4rem 1rem;
+  }
+  .row .date { grid-row: span 4; grid-template-columns: 1fr; }
+  .row .date .d { font-size: 3rem; }
+  .row .title { font-size: 1.7rem; }
+  .row .blurb { display: none; }
+  .row { padding: 1.2rem 0 1.1rem; }
+  .row .time { display: block; padding-top: 0; }
+  .row .place { padding-top: 0.2rem; }
+  .row .go { justify-self: start; }
+
+  .day { grid-template-columns: 1fr; }
+  .day-label {
+    position: static;
+    padding-bottom: 1.5rem;
+  }
+}
+
+/* Photos rise in as they enter, then stay put (the columns page's fly-out
+   would drag a day's last photos down into the next day's label). */
+@supports (animation-timeline: view()) {
+  .day .card {
+    animation: rise linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 100%;
+  }
+  @keyframes rise {
+    from { transform: translateY(5vh); opacity: 0.35; }
+    to { transform: none; opacity: 1; }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .day .card { animation: none !important; }
+  .today .dot { animation: none; }
+}

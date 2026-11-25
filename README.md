@@ -1,13 +1,17 @@
 # web-experiments
 
-Static layout experiments for [edgecollective.io](https://edgecollective.io), populated
-with photos and text from the `edge-blog` repo. Plain HTML + CSS + JS, no build step
-needed to view.
+Static layout experiments for [edgecollective.io](https://edgecollective.io) (photos and
+text from the `edge-blog` repo) and [waterbearfieldschool.org](https://waterbearfieldschool.org)
+(from the `wfs-site` repo). Plain HTML + CSS + JS, no build step needed to view.
 
 | Page | Inspired by | Look |
 |---|---|---|
-| [`collage/`](collage/) | vukdragojevic.com | White page, fixed left nav, freeform scattered-image collage, pinned labels, quick-view lightbox |
-| [`columns/`](columns/) | jakewinkle.com | Black page, serif type, ruled header, two staggered columns with "Title, Year" captions, scrolling shop marquee |
+| [`collage/`](collage/), [`wfs/collage/`](wfs/collage/) | vukdragojevic.com | White page, fixed left nav, freeform scattered-image collage, pinned labels, quick-view lightbox |
+| [`columns/`](columns/), [`wfs/columns/`](wfs/columns/) | jakewinkle.com | Black page, serif type, ruled header, two staggered columns with "Title, Year" captions, scrolling marquee |
+| [`wfs/field-days/`](wfs/field-days/) | both | Field Days schedule (hover a row for a preview), a "today" line, then past days as a timeline: date and title pinned left, photos in staggered columns |
+
+The `collage/` and `columns/` folders hold the shared engine (CSS + JS) as well as the
+Edge Collective pages; the WFS pages load the same engine with different content.
 
 ## Viewing
 
@@ -23,21 +27,28 @@ Routes:
 
 - `collage/#/` overview, `#/c/<category>`, `#/p/<slug>`, `#/index`, `#/info`
 - `columns/#/` home, `#/p/<slug>`, `#/about`
+- `wfs/field-days/` is a single page
 
 ## Content
 
-- `assets/content.js` — all text and the image list for each project. Edit this by hand;
-  both pages read it. It is `window.EC = { ...JSON... };`, so keep it valid JSON.
-- `assets/images.js` — generated; maps each image ref to its resized files and size.
-- `assets/img/` — generated; resized copies (1600px and 800px), EXIF stripped.
+Each site has a content folder: `assets/` (Edge Collective) and `wfs/` (Waterbear).
 
-Image refs in `content.js` are paths relative to `edge-blog/img/`
-(e.g. `"ojofeliz/ofr1.jpeg"`), or `~/...` paths for files in other repos.
+- `content.js` — all text, settings, and image lists. Edit by hand; it is
+  `window.EC = { ...JSON... };`, so keep it valid JSON. `site` holds the per-site
+  settings (name, nav order, caption wording, marquee, about sections, where images
+  come from); `projects` holds the galleries. WFS also has `schedule` for the Field Days
+  page — **its upcoming dates are placeholders.**
+- `images.js` — generated; maps each image ref to its resized files and size.
+- `img/` — generated; resized copies (1600px and 800px), EXIF stripped.
+
+Image refs are paths relative to `site.imageSource` (e.g. `edge-blog/img`,
+`wfs-site/src/assets/images`), or `~/...` paths for files elsewhere.
 After adding or changing images, run:
 
 ```sh
-python3 scripts/import_images.py            # uses ~/gitwork/edge-blog by default
-python3 scripts/import_images.py --edge-blog /path/to/edge-blog --force
+python3 scripts/import_images.py                  # Edge Collective (assets/content.js)
+python3 scripts/import_images.py wfs/content.js   # Waterbear Field School
+python3 scripts/import_images.py wfs/content.js --source /other/path --force
 ```
 
 (Requires Pillow.)
